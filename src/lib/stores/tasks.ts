@@ -25,16 +25,6 @@ export const updateTask = (taskId: number, updatedTask: Task) => {
   );
 };
 
-export const filteredTasks = (filter: "all" | "active" | "completed") => {
-  return derived(tasks, $tasks => {
-    switch(filter) {
-      case "active": return $tasks.filter(t => !t.completed);
-      case "completed": return $tasks.filter(t => t.completed);
-      default: return $tasks;
-    }
-  });
-};
-
 export function remainingTasks() {
   return get(tasks).filter((task) => !task.completed);
 }
