@@ -1,4 +1,5 @@
 import { writable, get, derived } from "svelte/store";
+import { filterTasksBySearch } from "$lib/utils/search";
 
 export interface Task {
   id: number;
@@ -9,6 +10,8 @@ export interface Task {
 
 export const tasks = writable<Task[]>([]);
 export const filter = writable<'all' | 'active' | 'completed'>('all');
+
+export const searchQuery = writable('');
 
 export const addTask = (task: Task) => {
   tasks.update((oldTasks) => [...oldTasks, task]);
@@ -27,15 +30,17 @@ export const updateTask = (taskId: number, updatedTask: Task) => {
 };
 
 export const filteredTasks = derived(
-  [tasks, filter],
-  ([$tasks, $filter]) => {
+  [tasks, filter, searchQuery],
+  ([$tasks, $filter, $searchQuery]) => {
+    const searchedTasks = filterTasksBySearch($tasks, $searchQuery);
+
     switch($filter) {
       case 'active':
-        return $tasks.filter((task) => !task.completed);
+        return searchedTasks.filter((task) => !task.completed);
       case 'completed':
-        return $tasks.filter((task) => task.completed);
+        return searchedTasks.filter((task) => task.completed);
       default:
-        return $tasks;
+        return searchedTasks;
     }
   }
 );

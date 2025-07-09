@@ -5,11 +5,16 @@
     import Logo from "./Logo.svelte";
     import Task from "./Task.svelte";
     import { fade } from "svelte/transition";
-    import { filter } from "$lib/stores/tasks";
+    import { filter, tasks } from "$lib/stores/tasks";
     import SearchButton from "./SearchButton.svelte";
 
     let { toggleNewTask = $bindable(false), ...props } : { [key: string]: any } = $props(); 
     let showForm = false;
+    let filteredTasks = tasks;
+
+    function handleSearchResults(results) {
+        filteredTasks = results;
+    }
 
     $effect(() => {
         if (toggleNewTask) {
@@ -43,27 +48,13 @@
         <FilterButtons label="Completed" value="completed" current={$filter} onclick={() => filter.set('completed')}>Completed Notes</FilterButtons>
     </div>    
     <div class="search">
-        <SearchButton />
+        <SearchButton tasks={tasks} onSearchResults={ handleSearchResults } />
     </div>
 </header>
 
 {#if toggleNewTask}
-    <div
-        class="overlay"
-        role="button"
-        tabindex="0"
-        aria-label="Close modal"
-        onclick={() => (toggleNewTask = false)}
-        onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { toggleNewTask = false; } }}
-    >
-        <div
-            class="modal"
-            role="dialog"
-            tabindex="0"
-            aria-modal="true"
-            onclick={(e) => e.stopPropagation()}
-            onkeydown={(e) => e.stopPropagation()}
-        >
+    <div class="overlay" role="button" tabindex="0" aria-label="Close modal" onclick={() => (toggleNewTask = false)} onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { toggleNewTask = false; } }}>
+        <div class="modal" role="dialog" tabindex="0" aria-modal="true" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
             <Task bind:isShown={toggleNewTask} task={undefined} />
         </div>
     </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
-    import { filteredTasks, filter } from "$lib/stores/tasks";
+    import { filteredTasks, filter, searchQuery } from "$lib/stores/tasks";
     import Header from "$lib/components/Header.svelte";
     import Task from "$lib/components/Task.svelte";
 
@@ -14,11 +14,11 @@
         <div class="task-lists" in:fade={{ delay: 200, duration: 150 }}>
            <span class="no-tasks">
                 {#if $filter === 'all'}
-                    No Notes Created Yet!
+                    {$searchQuery ? 'No matching notes found' : 'No Notes Created Yet!'}
                 {:else if $filter === 'active'}
-                    No Active Notes!
+                    {$searchQuery ? 'No matching active notes' : 'No Active Notes!'}
                 {:else}
-                    No Completed Notes!
+                    {$searchQuery ? 'No matching completed notes' : 'No Completed Notes!'}
                 {/if}
             </span>
         </div>

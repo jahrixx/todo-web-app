@@ -1,22 +1,24 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Icon from "@iconify/svelte";
+    import { searchQuery } from "$lib/stores/tasks";
 
     let { 
         toggleSearch = $bindable(false), 
         placeholder = 'Search...', 
         searchInput = $bindable(null as HTMLInputElement | null), 
-        onSearch = (value: string) => {},
-        ...props 
-    }: { 
-        toggleSearch?: boolean;
-        placeholder?: string;
-        searchInput?: HTMLInputElement | null;
-        onSearch?: (value: string) => void;
-        [key: string]: any;
-    } = $props();
+        ...props }: { 
+            toggleSearch?: boolean; 
+            placeholder?: string; 
+            searchInput?: HTMLInputElement | null; 
+            [key: string]: any; } = $props();
+
+    let showSearch = $state(false)
+    let localQuery = $state('')
     
-    let showSearch = $state(false);
+    $effect(() => {
+        searchQuery.set(localQuery);    
+    });
 
     $effect(() => {
         if (toggleSearch) {
@@ -26,12 +28,14 @@
             }, 0);
         } else {
             showSearch = false;
+            localQuery = '';
         }
     });
 
     const handleClickOutside = (event: MouseEvent) => {
         if (showSearch && searchInput && !event.composedPath().includes(searchInput)) {
             showSearch = false;
+            toggleSearch = false;
         }
     };
 
@@ -48,7 +52,12 @@
         <Icon icon="fa6-solid:magnifying-glass" style="font-size: 1.2rem; margin-top: .25rem;" />
     </button>
     
-    <input bind:this={searchInput} class:visible={showSearch} {placeholder} onkeydown={(e) => { if (e.key === 'Enter') { onSearch((e.target as HTMLInputElement).value); }}} />
+    <input 
+        bind:this={searchInput} 
+        bind:value={localQuery}
+        class:visible={showSearch} 
+        {placeholder} 
+        onkeydown={(e) => e.key === 'Escape' && (showSearch = toggleSearch = false)} />
 </div>
 
 <style>
@@ -97,6 +106,5 @@
         width: 200px;
         opacity: 1;
         transform: translateX(0);
-        /* position: relative; */
     }
 </style>
