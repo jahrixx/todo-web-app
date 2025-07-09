@@ -6,9 +6,20 @@
     import { filter } from "$lib/stores/tasks";
 
     let { toggleNewTask = $bindable(false), ...props } : { [key: string]: any } = $props(); 
+    let showForm = false;
+
+    $effect(() => {
+        if (toggleNewTask) {
+            setTimeout(() => {
+                showForm = true;
+            }, 0);
+        } else {
+            showForm = false;
+        }
+    });
 </script>
 
-<header class="header">
+<header class="header glass">
     <div class="header-title">
         <h1 class="title">My Task Planner</h1>
         <BaseButton onclick={() => (toggleNewTask = !toggleNewTask)} aria-label="Add task">
@@ -24,9 +35,9 @@
         </BaseButton>
     </div>
     <div class="filter-controls">
-        <button class:active={$filter === 'all'} onclick={() => filter.set('all')}>All</button>
-        <button class:active={$filter === 'active'} onclick={() => filter.set('active')}>Active</button>
-        <button class:active={$filter === 'completed'} onclick={() => filter.set('completed')}>Completed</button>
+        <button class="glass" class:active={$filter === 'all'} onclick={() => filter.set('all')}>All</button>
+        <button class="glass" class:active={$filter === 'active'} onclick={() => filter.set('active')}>Active</button>
+        <button class="glass" class:active={$filter === 'completed'} onclick={() => filter.set('completed')}>Completed</button>
     </div>    
 </header>
 
@@ -53,13 +64,18 @@
 {/if}
 
 <style>
+.glass {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #ffffff;
     padding: .5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     margin-bottom: 1rem;
 }
 
@@ -74,6 +90,7 @@
     font-size: 2rem;
     font-weight: 700;
     color: #2d3748;
+    opacity: 0.9;
 }
 
 .icon {
@@ -107,10 +124,12 @@
 
 .filter-controls button {
     padding: 0.5rem 1rem;
-    border: 1px solid #ccc;
-    background: white;
+    border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
 }
 
 .filter-controls button.active {

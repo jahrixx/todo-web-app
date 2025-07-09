@@ -2,6 +2,9 @@
     import Icon from "@iconify/svelte";
     import { type Task, addTask, removeTask, updateTask } from "$lib/stores/tasks";
     import BaseButton from "./BaseButton.svelte";
+    import CancelButton from "./CancelButton.svelte";
+    import DoneButton from "./DoneButton.svelte";
+    import FormButtons from "./FormButtons.svelte";
     import { fade, slide } from "svelte/transition";
 
     let { task, isShown = $bindable(false), ...props } : { task?: Task, isNotCancelled?: boolean, [key: string]: any} = $props();
@@ -41,7 +44,7 @@
     }
 </script>
 
-<div class="task-wrapper" in:slide={{duration: 500}} out:slide={{duration: 500}} {...props} role="region" aria-labelledby="task">
+<div class="task-wrapper glass" in:slide={{duration: 500}} out:slide={{duration: 500}} {...props} role="region" aria-labelledby="task">
     {#if task && !isEditable}
         <div class="task-container" in:fade={{duration: 500}}>
             <div class="task-content">
@@ -51,49 +54,56 @@
                 {/if}
             </div>
             <div class="task-actions">
-                <BaseButton onclick={() => removeTask(task)} aria-labelledby="remove task">
+                <FormButtons onclick={() => removeTask(task)} aria-labelledby="remove task">
                     <Icon icon="fa6-solid:trash" />
-                </BaseButton>
-                <BaseButton onclick={() => (isEditable = true)} aria-labelledby="update task">
+                </FormButtons>
+                <FormButtons onclick={() => (isEditable = true)} aria-labelledby="update task">
                     <Icon icon="fa6-solid:pencil" />
-                </BaseButton>
-                <BaseButton onclick={() => task && updateTask(task.id, { ...task, completed: !task.completed })} aria-labelledby={task.completed ? "Mark task as done" : "Mark task as not done"}>
+                </FormButtons>
+                <FormButtons onclick={() => task && updateTask(task.id, { ...task, completed: !task.completed })} aria-labelledby={task.completed ? "Mark task as done" : "Mark task as not done"}>
                     {#if task.completed}
                         <Icon icon="mdi:checkbox-outline" />
                     {:else}
                         <Icon icon="mdi:checkbox-blank-outline" />
                     {/if}
-                </BaseButton>
+                </FormButtons>
             </div>
         </div>
         {:else}
-        <form class="task-form" action="#" in:fade={{duration: 150}} onsubmit={(e) => e.preventDefault()} aria-labelledby="task-edit">
+        <form class="task-form glass" action="#" in:fade={{duration: 150}} onsubmit={(e) => e.preventDefault()} aria-labelledby="task-edit">
             <div class="task-form-group">
                 <label for="task-title-input" class="form-label">Task name</label>
-                <input id="task-title-input" class="form-input" placeholder="Enter a Task Name" type="text" name="task-title" required bind:value={taskName} />
+                <input id="task-title-input" class="form-input glass" placeholder="Enter a Task Name" type="text" name="task-title" required bind:value={taskName} />
                 
                 <label for="task-description-input" class="form-label">Task description</label>
-                <textarea id="task-description-input" class="form-input" name="description" placeholder="Enter a Task Description" bind:value={taskDescription}></textarea>
+                <textarea id="task-description-input" class="form-input glass" name="description" placeholder="Enter a Task Description" bind:value={taskDescription}></textarea>
             </div>
             <div class="task-form-actions">
-                <BaseButton
+                <CancelButton
                     onclick={cancelForm}
                     aria-label="Cancel editing task">
                     Cancel
-                </BaseButton>
+                </CancelButton>
 
-                <BaseButton
+                <DoneButton
                     action="submit"
                     onclick={submitForm}
                     aria-label="Finish editing task">
                     Done
-                </BaseButton>
+                </DoneButton>
             </div>
         </form>
     {/if}
 </div>
 
 <style>
+    .glass {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
     .careful-text-overflow {
         word-wrap: break-word;
         white-space: pre-wrap;
@@ -105,8 +115,8 @@
         padding: 1rem;
         max-width: 600px;
         border-radius: 1rem;
-        background: #ffffff;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        /* background: #ffffff;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); */
         transition: all 0.3s ease-in-out;
     }
 
@@ -169,10 +179,10 @@
     }
 
     .task-form {
-        background: #ffffff;
+        /* background: #ffffff;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06); */
         padding: 2rem;
         border-radius: 1rem;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
         max-width: 600px;
         margin: auto;
         display: flex;
