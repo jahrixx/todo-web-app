@@ -14,11 +14,11 @@
         <div class="task-lists" in:fade={{ delay: 200, duration: 150 }}>
            <span class="no-tasks">
                 {#if $filter === 'all'}
-                    No Tasks Available!
+                    No Notes Created Yet!
                 {:else if $filter === 'active'}
-                    No Active Tasks!
+                    No Active Notes!
                 {:else}
-                    No Completed Tasks!
+                    No Completed Notes!
                 {/if}
             </span>
         </div>
@@ -42,8 +42,11 @@
     .no-tasks {
         display: flex;
         justify-content: center;
-        font-size: 1.8em;
+        font-size: 2rem;
+        font-weight: 600;
+        font-style: italic;
         color: #495057;
+        margin-top: 20%;
         margin-bottom: 10px;
     }
     .task-grid {
@@ -53,12 +56,7 @@
         padding: 0 1rem;
         grid-auto-flow: dense;
         margin-bottom: 1rem;
-        /* display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1rem;
-        padding: 1rem;
-        align-items: start;
-        position: relative; */
+        margin-top: 6.5rem;
     }
     .task-lists {
         display: flex;

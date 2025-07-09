@@ -6,6 +6,7 @@
     import Task from "./Task.svelte";
     import { fade } from "svelte/transition";
     import { filter } from "$lib/stores/tasks";
+    import SearchButton from "./SearchButton.svelte";
 
     let { toggleNewTask = $bindable(false), ...props } : { [key: string]: any } = $props(); 
     let showForm = false;
@@ -21,7 +22,7 @@
     });
 </script>
 
-<header class="header glass">
+<header class="header glass sticky">
     <div class="header-title">
         <Logo />
         <BaseButton onclick={() => (toggleNewTask = !toggleNewTask)} aria-label="Add task">
@@ -37,10 +38,13 @@
         </BaseButton>
     </div>
     <div class="filter-controls">
-        <FilterButtons label="All" value="all" current={$filter} onclick={() => filter.set('all')}>All Tasks</FilterButtons>
-        <FilterButtons label="Active" value="active" current={$filter} onclick={() => filter.set('active')}>Active Tasks</FilterButtons>
-        <FilterButtons label="Completed" value="completed" current={$filter} onclick={() => filter.set('completed')}>Completed Tasks</FilterButtons>
+        <FilterButtons label="All" value="all" current={$filter} onclick={() => filter.set('all')}>All Notes</FilterButtons>
+        <FilterButtons label="Active" value="active" current={$filter} onclick={() => filter.set('active')}>Active Notes</FilterButtons>
+        <FilterButtons label="Completed" value="completed" current={$filter} onclick={() => filter.set('completed')}>Completed Notes</FilterButtons>
     </div>    
+    <div class="search">
+        <SearchButton />
+    </div>
 </header>
 
 {#if toggleNewTask}
@@ -66,6 +70,12 @@
 {/if}
 
 <style>
+.sticky {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+}
+
 .glass {
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
@@ -81,7 +91,7 @@
     padding: .25rem 1rem;
     margin-bottom: 1rem;
     box-shadow: 0 8px 16px rgba(0, 0, 0, .5);
-    /* border-bottom: 2px solid #DC143C; */
+    width: 100%;
 }
 
 .header-title {
@@ -104,6 +114,7 @@
     display: flex;
     gap: 0.5rem;
     justify-content: center;
+    margin-right: 2rem;
 }
 
 .overlay {
@@ -129,6 +140,10 @@
     animation: popIn 0.25s ease-out;
 }
 
+.search {
+    margin-right: 1.25rem;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -138,5 +153,15 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Tablet Responsiveness */
+@media (max-width: 1024px) {
+
+}
+
+/* Phones Responsiveness */
+@media (max-width: 600px) {
+
 }
 </style>

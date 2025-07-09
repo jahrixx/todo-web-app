@@ -1,5 +1,5 @@
 <div class="typing-container">
-    <h3 class="typing-text"> My Task Planner</h3>
+    <h3 class="typing-text"> My Notes Planner</h3>
 </div>
 
 <style>
