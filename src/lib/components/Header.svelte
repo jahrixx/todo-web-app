@@ -48,7 +48,7 @@
         <FilterButtons label="Completed" value="completed" current={$filter} onclick={() => filter.set('completed')}>Completed Notes</FilterButtons>
     </div>    
     <div class="search">
-        <SearchButton tasks={tasks} onSearchResults={ handleSearchResults } />
+        <SearchButton tasks={tasks} onSearchResults={ handleSearchResults } debounceTime={500} />
     </div>
 </header>
 

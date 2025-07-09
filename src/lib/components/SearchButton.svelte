@@ -2,22 +2,30 @@
     import { onMount } from "svelte";
     import Icon from "@iconify/svelte";
     import { searchQuery } from "$lib/stores/tasks";
+    import { debounce } from "$lib/utils/debounce";
 
     let { 
         toggleSearch = $bindable(false), 
-        placeholder = 'Search...', 
+        placeholder = 'Search a note...', 
         searchInput = $bindable(null as HTMLInputElement | null), 
+        debounceTime = 500,
         ...props }: { 
             toggleSearch?: boolean; 
             placeholder?: string; 
-            searchInput?: HTMLInputElement | null; 
+            searchInput?: HTMLInputElement | null;
+            debounceTime?: number;
             [key: string]: any; } = $props();
 
     let showSearch = $state(false)
     let localQuery = $state('')
     
+    const debouncedUpdateSearch = debounce((query: string) => {
+        searchQuery.set(query);
+    }, debounceTime)
+
     $effect(() => {
-        searchQuery.set(localQuery);    
+        debouncedUpdateSearch(localQuery);
+        return () => debouncedUpdateSearch.cancel?.();    
     });
 
     $effect(() => {
@@ -29,6 +37,7 @@
         } else {
             showSearch = false;
             localQuery = '';
+            searchQuery.set('');
         }
     });
 
