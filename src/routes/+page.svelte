@@ -1,6 +1,6 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
-    import { tasks, filteredTasks, filter } from "$lib/stores/tasks";
+    import { filteredTasks, filter } from "$lib/stores/tasks";
     import Header from "$lib/components/Header.svelte";
     import Task from "$lib/components/Task.svelte";
 
@@ -47,10 +47,18 @@
         margin-bottom: 10px;
     }
     .task-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: .5rem;
-        padding: .5rem;
+        column-count: auto;
+        column-width: 250px;
+        column-gap: 1rem;
+        padding: 0 1rem;
+        grid-auto-flow: dense;
+        margin-bottom: 1rem;
+        /* display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+        align-items: start;
+        position: relative; */
     }
     .task-lists {
         display: flex;

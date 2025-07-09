@@ -1,7 +1,6 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
     import { type Task, addTask, removeTask, updateTask } from "$lib/stores/tasks";
-    import BaseButton from "./BaseButton.svelte";
     import CancelButton from "./CancelButton.svelte";
     import DoneButton from "./DoneButton.svelte";
     import FormButtons from "./FormButtons.svelte";
@@ -70,13 +69,13 @@
             </div>
         </div>
         {:else}
-        <form class="task-form glass" action="#" in:fade={{duration: 150}} onsubmit={(e) => e.preventDefault()} aria-labelledby="task-edit">
+        <form class="task-form" action="#" in:fade={{duration: 150}} onsubmit={(e) => e.preventDefault()} aria-labelledby="task-edit">
             <div class="task-form-group">
-                <label for="task-title-input" class="form-label">Task name</label>
-                <input id="task-title-input" class="form-input glass" placeholder="Enter a Task Name" type="text" name="task-title" required bind:value={taskName} />
+                <label for="task-title-input" class="form-label">Task Name</label>
+                <input id="task-title-input" class="form-input" placeholder="Enter a Task Name" type="text" name="task-title" required bind:value={taskName} />
                 
-                <label for="task-description-input" class="form-label">Task description</label>
-                <textarea id="task-description-input" class="form-input glass" name="description" placeholder="Enter a Task Description" bind:value={taskDescription}></textarea>
+                <label for="task-description-input" class="form-label">Task Description</label>
+                <textarea id="task-description-input" class="form-input" name="description" placeholder="Enter a Task Description" bind:value={taskDescription}></textarea>
             </div>
             <div class="task-form-actions">
                 <CancelButton
@@ -111,13 +110,18 @@
     }
 
     .task-wrapper {
-        margin: 1rem auto;
+        margin: 0;
         padding: 1rem;
-        max-width: 600px;
         border-radius: 1rem;
-        /* background: #ffffff;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); */
         transition: all 0.3s ease-in-out;
+        height: auto;
+        width: 90%;
+        max-width: unset;
+        display: block;
+        break-inside: avoid;
+        outline: 2px dashed black;
+        min-height: 0;
+        margin-bottom: 1rem;
     }
 
     .task-container {
@@ -128,7 +132,7 @@
 
     .task-content {
         padding-bottom: 0.5rem;
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid white;
     }
 
     .task-content h2 {
@@ -151,27 +155,6 @@
         justify-content: flex-end;
     }
 
-    .btn {
-        background-color: #f3f4f6;
-        border: none;
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.5rem;
-        cursor: pointer;
-        transition: background-color 0.2s ease-in-out;
-    }
-
-    .btn:hover {
-        background-color: #e5e7eb;
-    }
-
-    .btn.danger {
-        background-color: #fee2e2;
-    }
-
-    .btn.danger:hover {
-        background-color: #fecaca;
-    }
-
     .careful-text-overflow {
         word-wrap: break-word;
         white-space: pre-wrap;
@@ -179,12 +162,10 @@
     }
 
     .task-form {
-        /* background: #ffffff;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06); */
-        padding: 2rem;
+        padding: .5rem;
         border-radius: 1rem;
-        max-width: 600px;
-        margin: auto;
+        max-width: 100%;
+        margin: auto 0;
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
@@ -194,13 +175,14 @@
     .task-form-group {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.5rem;
     }
 
     .form-label {
+        font-size: 1.2rem;
         font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.25rem;
+        color: #FAF9F6;
+        margin-bottom: 0.2rem;
     }
 
     .form-input {
@@ -210,6 +192,10 @@
         font-size: 1rem;
         outline: none;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input::placeholder {
+        font-size: 0.85rem;
     }
 
     .form-input:focus {
@@ -223,7 +209,6 @@
         gap: 1rem;
     }
 
-    /* Fade in animation */
     @keyframes fadeIn {
         from {
             opacity: 0;

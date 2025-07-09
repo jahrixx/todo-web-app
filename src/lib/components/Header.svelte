@@ -1,6 +1,8 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
     import BaseButton from "./BaseButton.svelte";
+    import FilterButtons from "./FilterButtons.svelte";
+    import Logo from "./Logo.svelte";
     import Task from "./Task.svelte";
     import { fade } from "svelte/transition";
     import { filter } from "$lib/stores/tasks";
@@ -21,7 +23,7 @@
 
 <header class="header glass">
     <div class="header-title">
-        <h1 class="title">My Task Planner</h1>
+        <Logo />
         <BaseButton onclick={() => (toggleNewTask = !toggleNewTask)} aria-label="Add task">
             {#if toggleNewTask}
             <div class="fade-in icon" in:fade={{ duration: 150 }}>
@@ -35,9 +37,9 @@
         </BaseButton>
     </div>
     <div class="filter-controls">
-        <button class="glass" class:active={$filter === 'all'} onclick={() => filter.set('all')}>All</button>
-        <button class="glass" class:active={$filter === 'active'} onclick={() => filter.set('active')}>Active</button>
-        <button class="glass" class:active={$filter === 'completed'} onclick={() => filter.set('completed')}>Completed</button>
+        <FilterButtons label="All" value="all" current={$filter} onclick={() => filter.set('all')}>All Tasks</FilterButtons>
+        <FilterButtons label="Active" value="active" current={$filter} onclick={() => filter.set('active')}>Active Tasks</FilterButtons>
+        <FilterButtons label="Completed" value="completed" current={$filter} onclick={() => filter.set('completed')}>Completed Tasks</FilterButtons>
     </div>    
 </header>
 
@@ -72,11 +74,14 @@
 }
 
 .header {
+    height: 80px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: .5rem;
+    padding: .25rem 1rem;
     margin-bottom: 1rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, .5);
+    /* border-bottom: 2px solid #DC143C; */
 }
 
 .header-title {
@@ -85,33 +90,12 @@
     gap: 0.5rem;
 }
 
-.title {
-    margin-top: 15px;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #2d3748;
-    opacity: 0.9;
-}
-
 .icon {
     width: 20px;
     height: 20px;
     color: white;
     font-size: 1.2rem;
 }
-
-/* Animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 .fade-in {
     animation: fadeIn 0.3s ease-out;
 }
@@ -122,29 +106,13 @@
     justify-content: center;
 }
 
-.filter-controls button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 0;
-    font-size: 14px;
-    opacity: 0.9;
-}
-
-.filter-controls button.active {
-    background: #007acc;
-    color: white;
-    border-color: #007acc;
-}
-
 .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,11 +121,22 @@
 }
 
 .modal {
-    padding: 2rem;
+    padding: 1rem;
     border-radius: 16px;
     min-width: 320px;
     max-width: 600px;
     width: 90%;
     animation: popIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>
