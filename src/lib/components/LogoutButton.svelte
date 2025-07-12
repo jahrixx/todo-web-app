@@ -33,11 +33,6 @@
     .logout-wrapper {
         margin: 0;
         padding: 0;
-        /* position: relative;
-        display: flex;
-        align-items: center;
-        gap: .35rem;
-        margin-right: .35rem; */
     }
 
     .logout-icon {
@@ -49,6 +44,5 @@
         align-items: center;
         justify-content: center;
         z-index: 100;
-        /* outline: 2px solid black; */
     }
 </style>

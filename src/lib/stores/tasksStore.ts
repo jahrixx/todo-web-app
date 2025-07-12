@@ -3,7 +3,8 @@ import { token } from "$lib/stores/auth";
 import { get, writable, derived } from "svelte/store";
 import { filterTasksBySearch } from "$lib/utils/search"; 
 import type { Task } from "$lib/types/task";
-
+  
+export const loading = writable(true);
 export const tasks = writable<Task[]>([]);
 export const filter = writable<'all' | 'active' | 'completed'>('all');
 export const searchQuery = writable('');
@@ -24,19 +25,8 @@ export const filteredTasks = derived(
   }
 );
 
-// export async function fetchAllTasks() {
-//   if (!token || !token) return;
-
-//   try {
-//     const data = await getTasks(get(token)); // <- call your API
-//     tasks.set(data); // <- update the store
-//   } catch (err) {
-//     console.error("Failed to fetch tasks:", err);
-//     tasks.set([]);
-//   }
-// }
-
 export async function fetchAllTasks() {
+  loading.set(true);
   const authToken = get(token);
     if(!authToken) return;
     
@@ -47,14 +37,10 @@ export async function fetchAllTasks() {
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
       tasks.set([]);
+    } finally {
+      loading.set(false);
     }
 }
-
-// export async function createNewTask(task: { title: string; description?: string }): Promise<void> {
-//   const authToken = get(token);
-//   if (!authToken) throw new Error("No token found");
-//   await createTask(authToken, task);
-// }
 
 export async function createNewTaskRemote(task: {title: string, description?: string}): Promise<void> {
   const authToken = get(token);
@@ -79,14 +65,3 @@ export async function deleteTaskRemote(id: string): Promise<void> {
     await deleteTask(authToken, id);
     await fetchAllTasks();
 }
-// export async function updateTaskRemote(task: any): Promise<void> {
-//   const authToken = get(token);
-//   if (!authToken) throw new Error("No token found");
-//   await updateTask(authToken, task);
-// }
-
-// export async function deleteTaskRemote(id: string): Promise<void> {
-//   const authToken = get(token);
-//   if (!authToken) throw new Error("No token found");
-//   await deleteTask(authToken, id);
-// }

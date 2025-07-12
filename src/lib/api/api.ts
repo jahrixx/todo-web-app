@@ -14,9 +14,10 @@ export const login = async(email: string, password: string) => {
 export const getTasks = async(token: string) => {
     try {
         const response = await axios.get(`${API}/tasks`, { headers: { Authorization: `Bearer ${token}` } });
-        return response.data;    
+        return Array.isArray(response.data) ? response.data : [];
     } catch (error) {
         console.error(error);
+        return [];
     }
 }
 

@@ -1,15 +1,11 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
     import { updateTaskRemote,  createNewTaskRemote, deleteTaskRemote } from "$lib/stores/tasksStore";
-    // import { getTasks, updateTask, createTask, deleteTask } from "$lib/api/api";
     import CancelButton from "./CancelButton.svelte";
     import DoneButton from "./DoneButton.svelte";
     import FormButtons from "./FormButtons.svelte";
     import { fade, slide } from "svelte/transition";
-    import { token } from "$lib/stores/auth";
-    import { get } from "svelte/store";
     import type { Task } from "$lib/types/task";
-    import { updateTask } from "$lib/api/api";
 
    let {
         task,
@@ -36,27 +32,6 @@
             isShown = false;
         }
     }
-
-    // async function submitForm() {
-    //     const authToken = get(token);
-    //         if (!authToken) return;
-
-    //         if (isEditable && task && taskName !== "") {
-    //         await updateTaskRemote({
-    //             ...task,
-    //             completed: !task.completed
-    //         });
-    //             isEditable = false;
-    //             onUpdate();
-    //         } else if (!task && taskName !== "") {
-    //             await createNewTaskRemote({
-    //             title: taskName,
-    //             description: taskDescription
-    //         });
-    //         isShown = false;
-    //         onUpdate();
-    //     }
-    // }
 
     async function submitForm() {
         if (!taskName.trim()) return;
@@ -92,10 +67,22 @@
     }
 
     async function removeTask() {
-        if (!task) return;
-        await deleteTaskRemote(task.id);
-        
-        onUpdate();
+        if (!task) {
+            console.error("No task provided for deletion!")
+            return;
+        } 
+       
+        if(!confirm('Are you sure you want to delete this task?')) {
+            return;
+        } 
+
+        try {
+            await deleteTaskRemote(task.id);
+            onUpdate();    
+        } catch (error) {
+            console.error(error);
+            alert("There was an error on deleting the task. Please try again!")
+        }  
     }
 </script>
 

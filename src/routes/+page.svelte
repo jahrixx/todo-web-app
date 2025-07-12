@@ -4,18 +4,18 @@
   import { token } from "$lib/stores/auth";
   import Header from "$lib/components/Header.svelte";
   import Task from "$lib/components/Task.svelte";
-  import { filteredTasks, filter, searchQuery, fetchAllTasks } from "$lib/stores/tasksStore";
+  import { filteredTasks, filter, searchQuery, fetchAllTasks, tasks } from "$lib/stores/tasksStore";
+  import { get } from "svelte/store";
+  import { loading } from "$lib/stores/tasksStore"
 
   let toggleNewTask = $state(false);
-  // const loading = $derived(() => $tasks.length === 0);
-  let loading = $state(true);
-  
+
   onMount(async () => {
-    if(!$token){
+    const userToken = get(token);
+    if (!userToken){
       window.location.href = '/login';
     } else {
       await fetchAllTasks();
-      loading = false;
     }
   });
 
@@ -24,10 +24,7 @@
 {#if $token}
   <Header bind:toggleNewTask {loading} />
   <main class="main-app-container">
-    <!-- {#if !loading}
-      <pre class="debug">{$filteredTasks.length} tasks loaded</pre>
-    {/if} -->
-    {#if loading}
+    {#if $loading}
       <div class="task-lists" in:fade={{ delay: 150 }}>
         <span class="no-tasks">Loading your tasks...</span>
       </div>
@@ -45,16 +42,16 @@
         </span>
       </div>
 
-    {:else if !toggleNewTask}
-      <div class="task-grid">
+    {:else if $filteredTasks.length > 0 && !toggleNewTask}
+      <div class="task-grid" in:fade={{ delay: 200 }}>
         {#each $filteredTasks as task (task.id)}
           <Task {task} />
         {/each}
       </div>
+
     {/if}
   </main>
 {/if}
-
 
 <style>
     :global(body) {
