@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import Icon from "@iconify/svelte";
     import { searchQuery } from "$lib/stores/tasksStore";
     import { debounce } from "$lib/utils/debounce";
+    import Icon from "@iconify/svelte";
 
     let { 
         toggleSearch = $bindable(false), 

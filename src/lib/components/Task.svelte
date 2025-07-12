@@ -1,11 +1,11 @@
 <script lang="ts">
-    import Icon from "@iconify/svelte";
+    import { fade, slide } from "svelte/transition";
     import { updateTaskRemote,  createNewTaskRemote, deleteTaskRemote } from "$lib/stores/tasksStore";
+    import type { Task } from "$lib/types/task";
     import CancelButton from "./CancelButton.svelte";
     import DoneButton from "./DoneButton.svelte";
     import FormButtons from "./FormButtons.svelte";
-    import { fade, slide } from "svelte/transition";
-    import type { Task } from "$lib/types/task";
+    import Icon from "@iconify/svelte";    
 
    let {
         task,
@@ -114,11 +114,11 @@
         {:else}
         <form class="task-form" action="#" in:fade={{duration: 150}} onsubmit={(e) => e.preventDefault()} aria-labelledby="task-edit">
             <div class="task-form-group">
-                <label for="task-title-input" class="form-label">Task Name</label>
-                <input id="task-title-input" class="form-input" placeholder="Enter a Task Name" type="text" name="task-title" required bind:value={taskName} />
+                <label for="task-title-input" class="form-label">Note Title</label>
+                <input id="task-title-input" class="form-input" placeholder="Enter a Note Title" type="text" name="task-title" required bind:value={taskName} />
                 
-                <label for="task-description-input" class="form-label">Task Description</label>
-                <textarea id="task-description-input" class="form-input" name="description" placeholder="Enter a Task Description" bind:value={taskDescription}></textarea>
+                <label for="task-description-input" class="form-label">Note Description</label>
+                <textarea id="task-description-input" class="form-input" name="description" placeholder="Enter a Note Description" bind:value={taskDescription}></textarea>
             </div>
             <div class="task-form-actions">
                 <CancelButton

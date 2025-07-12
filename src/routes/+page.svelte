@@ -2,11 +2,11 @@
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import { token } from "$lib/stores/auth";
-  import Header from "$lib/components/Header.svelte";
-  import Task from "$lib/components/Task.svelte";
-  import { filteredTasks, filter, searchQuery, fetchAllTasks, tasks } from "$lib/stores/tasksStore";
+  import { filteredTasks, filter, searchQuery, fetchAllTasks } from "$lib/stores/tasksStore";
   import { get } from "svelte/store";
   import { loading } from "$lib/stores/tasksStore"
+  import Header from "$lib/components/Header.svelte";
+  import Task from "$lib/components/Task.svelte";
 
   let toggleNewTask = $state(false);
 
@@ -26,7 +26,7 @@
   <main class="main-app-container">
     {#if $loading}
       <div class="task-lists" in:fade={{ delay: 150 }}>
-        <span class="no-tasks">Loading your tasks...</span>
+        <span class="no-tasks">Loading your notes...</span>
       </div>
 
     {:else if $filteredTasks.length === 0 && !toggleNewTask}
