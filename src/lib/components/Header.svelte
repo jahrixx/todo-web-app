@@ -27,52 +27,58 @@
 <header class="header glass sticky">
   <div class="header-title">
     <Logo />
-    <BaseButton
-      onclick={() => (toggleNewTask = !toggleNewTask)}
-      aria-label="Add task"
-    >
-      {#if toggleNewTask}
-        <div class="fade-in icon" in:fade={{ duration: 150 }}>
-          <Icon icon="fa6-solid:xmark" />
-        </div>
-      {:else}
-        <div class="fade-in icon" in:fade={{ duration: 150 }}>
+    {#if !$token}
+      <BaseButton style="cursor: default">
+        <div class="fade-in icon" style="cursor: default">
           <Icon icon="fa6-solid:plus" />
         </div>
-      {/if}
-    </BaseButton>
+      </BaseButton>
+    {/if}
+    {#if $token}
+      <BaseButton onclick={() => (toggleNewTask = !toggleNewTask)} aria-label="Add task">
+        {#if toggleNewTask}
+          <div class="fade-in icon" in:fade={{ duration: 150 }}>
+            <Icon icon="fa6-solid:xmark" />
+          </div>
+        {:else}
+          <div class="fade-in icon" in:fade={{ duration: 150 }}>
+            <Icon icon="fa6-solid:plus" />
+          </div>
+        {/if}
+      </BaseButton>
+    {/if}
   </div>
 
-  <div class="filter-controls">
-    <FilterButtons
-      label="All"
-      value="all"
-      current={$filter}
-      onclick={() => filter.set("all")}
-      >All Notes</FilterButtons
-    >
-    <FilterButtons
-      label="Active"
-      value="active"
-      current={$filter}
-      onclick={() => filter.set("active")}
-      >Active Notes</FilterButtons
-    >
-    <FilterButtons
-      label="Completed"
-      value="completed"
-      current={$filter}
-      onclick={() => filter.set("completed")}
-      >Completed Notes</FilterButtons
-    >
-  </div>
-
-  <div class="search">
-    <SearchButton debounceTime={500} />
-     {#if token}
+  {#if $token}
+    <div class="filter-controls">
+      <FilterButtons
+        label="All"
+        value="all"
+        current={$filter}
+        onclick={() => filter.set("all")}
+        >All Notes</FilterButtons
+      >
+      <FilterButtons
+        label="Active"
+        value="active"
+        current={$filter}
+        onclick={() => filter.set("active")}
+        >Active Notes</FilterButtons
+      >
+      <FilterButtons
+        label="Completed"
+        value="completed"
+        current={$filter}
+        onclick={() => filter.set("completed")}
+        >Completed Notes</FilterButtons
+      >
+    </div>
+    
+    <div class="search">
+      <SearchButton debounceTime={500} />    
       <LogoutButton />
-     {/if}
-  </div>
+    </div>
+  {/if}
 </header>
 
 {#if toggleNewTask}

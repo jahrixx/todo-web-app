@@ -2,6 +2,7 @@
   import { loginUser, registerUser, token, userId } from "$lib/stores/auth";
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
+  import Header from "$lib/components/Header.svelte";
 
   let email = $state("");
   let password = $state("");
@@ -40,14 +41,11 @@
   }
 </script>
 
+<Header />
 <section class="forms-section">
   <div class="forms">
     <!-- Login Form -->
     <div class="form-wrapper {activeForm === 'login' ? 'is-active' : ''}">
-      <button type="button" class="switcher switcher-login" onclick={() => (activeForm = 'login')}>
-        Login
-        <span class="underline"></span>
-      </button>
       <form class="form form-login" onsubmit={handleLogin}>
         <fieldset>
           <legend>Login</legend>
@@ -61,15 +59,16 @@
           </div>
         </fieldset>
         <button type="submit" class="btn-login">Login</button>
+        <div>
+          <button type="button" class="switcher switcher-login" onclick={() => (activeForm = 'signup')}>
+            <p style="color: black;">Dont have an account?</p>
+          </button>
+        </div>
       </form>
     </div>
 
     <!-- Signup Form -->
     <div class="form-wrapper {activeForm === 'signup' ? 'is-active' : ''}">
-      <button type="button" class="switcher switcher-signup" onclick={() => (activeForm = 'signup')}>
-        Sign Up
-        <span class="underline"></span>
-      </button>
       <form class="form form-signup" onsubmit={handleRegister}>
         <fieldset>
           <legend>Sign Up</legend>
@@ -86,7 +85,12 @@
             <input id="signup-password-confirm" type="password" bind:value={confirmPassword} required />
           </div>
         </fieldset>
-        <button type="submit" class="btn-signup">Continue</button>
+        <button type="submit" class="btn-signup">Register</button>
+        <div>  
+          <button type="button" class="switcher switcher-signup" onclick={() => (activeForm = 'login')}>
+            <p style="color: black;">Already have an account?</p>
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -106,7 +110,7 @@
 :global(body) {
   margin: 0;
   font-family: Roboto, -apple-system, 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
-  background: #3b4465;
+  background: url('../../lib/assets/wallpaper.jpg');
 }
 
 .forms-section {
@@ -119,7 +123,7 @@
 .forms {
   display: flex;
   align-items: flex-start;
-  margin-top: 30px;
+  margin-top: 150px;
 }
 
 .form-wrapper {
@@ -157,65 +161,22 @@
   padding: 0;
   text-transform: uppercase;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 12px;
   letter-spacing: .5px;
   color: #999;
   background-color: transparent;
   border: none;
   outline: none;
+  font-style: italic;
   transform: translateX(0);
   transition: all .3s ease-out;
 }
 
-.form-wrapper.is-active .switcher-login {
-  color: #fff;
-  transform: translateX(90px);
-}
-
-.form-wrapper.is-active .switcher-signup {
-  color: #fff;
-  transform: translateX(-90px);
-}
-
-.underline {
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  overflow: hidden;
-  pointer-events: none;
-  width: 100%;
-  height: 2px;
-}
-
-.underline::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: inherit;
-  display: block;
-  width: inherit;
-  height: inherit;
-  background-color: currentColor;
-  transition: transform .2s ease-out;
-}
-
-.switcher-login .underline::before {
-  transform: translateX(101%);
-}
-
-.switcher-signup .underline::before {
-  transform: translateX(-101%);
-}
-
-.form-wrapper.is-active .underline::before {
-  transform: translateX(0);
-}
-
 .form {
   overflow: hidden;
-  min-width: 260px;
+  min-width: 100px;
   margin-top: 50px;
-  padding: 30px 25px;
+  padding: 30px 70px;
   border-radius: 5px;
   transform-origin: top;
 }
@@ -230,28 +191,40 @@
 
 @keyframes showLogin {
   0% {
-    background: #d7e7f1;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     transform: translate(40%, 10px);
   }
   50% {
     transform: translate(0, 0);
   }
   100% {
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     transform: translate(35%, -20px);
   }
 }
 
 @keyframes hideLogin {
   0% {
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     transform: translate(35%, -20px);
   }
   50% {
     transform: translate(0, 0);
   }
   100% {
-    background: #d7e7f1;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     transform: translate(40%, 10px);
   }
 }
@@ -266,28 +239,40 @@
 
 @keyframes showSignup {
   0% {
-    background: #d7e7f1;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     transform: translate(-40%, 10px) scaleY(.8);
   }
   50% {
     transform: translate(0, 0) scaleY(.8);
   }
   100% {
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     transform: translate(-35%, -20px) scaleY(1);
   }
 }
 
 @keyframes hideSignup {
   0% {
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     transform: translate(-35%, -20px) scaleY(1);
   }
   50% {
     transform: translate(0, 0) scaleY(.8);
   }
   100% {
-    background: #d7e7f1;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     transform: translate(-40%, 10px) scaleY(.8);
   }
 }
@@ -324,12 +309,12 @@
 }
 
 .input-block {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .input-block label {
   font-size: 14px;
-  color: #a1b4b4;
+  color: black;
 }
 
 .input-block input {
@@ -339,18 +324,20 @@
   padding-right: 15px;
   padding-left: 15px;
   font-size: 16px;
-  line-height: 40px;
+  line-height: 30px;
   color: #3b4465;
-  background: #eef9fe;
-  border: 1px solid #cddbef;
-  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: none;
 }
 
 .form [type='submit'] {
   opacity: 0;
   display: block;
   min-width: 120px;
-  margin: 30px auto 10px;
+  margin: 10px auto 10px;
   font-size: 18px;
   line-height: 40px;
   border-radius: 25px;
@@ -366,14 +353,15 @@
 
 .btn-login {
   color: #fbfdff;
-  background: #a7e245;
+  background: #1d4ed8;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transform: translateX(-30%);
 }
 
 .btn-signup {
-  color: #a7e245;
-  background: #fbfdff;
-  box-shadow: inset 0 0 0 2px #a7e245;
+  color: #fbfdff;
+  background: #1d4ed8;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transform: translateX(30%);
 }
 </style>
