@@ -1,63 +1,104 @@
 <script lang="ts">
-    import Icon from "@iconify/svelte";
-    import BaseButton from "./BaseButton.svelte";
-    import FilterButtons from "./FilterButtons.svelte";
-    import Logo from "./Logo.svelte";
-    import Task from "./Task.svelte";
-    import { fade } from "svelte/transition";
-    import { filter, tasks } from "$lib/stores/tasks";
-    import SearchButton from "./SearchButton.svelte";
+  import { fade } from "svelte/transition";
+  import { filter } from "$lib/stores/tasksStore";
+  import { token } from "$lib/stores/auth";
+  import Icon from "@iconify/svelte";
+  import Logo from "./Logo.svelte";
+  import Task from "./Task.svelte";
+  import LogoutButton from "./LogoutButton.svelte";
+  import SearchButton from "./SearchButton.svelte";
+  import BaseButton from "./BaseButton.svelte";
+  import FilterButtons from "./FilterButtons.svelte";
+  
+  let { toggleNewTask = $bindable(false), ...props }: { [key: string]: any } = $props();
+  let showForm = false;
 
-    let { toggleNewTask = $bindable(false), ...props } : { [key: string]: any } = $props(); 
-    let showForm = false;
-    let filteredTasks = tasks;
-
-    function handleSearchResults(results) {
-        filteredTasks = results;
+  $effect(() => {
+    if (toggleNewTask) {
+      setTimeout(() => {
+        showForm = true;
+      }, 0);
+    } else {
+      showForm = false;
     }
-
-    $effect(() => {
-        if (toggleNewTask) {
-            setTimeout(() => {
-                showForm = true;
-            }, 0);
-        } else {
-            showForm = false;
-        }
-    });
+  });
 </script>
 
 <header class="header glass sticky">
-    <div class="header-title">
-        <Logo />
-        <BaseButton onclick={() => (toggleNewTask = !toggleNewTask)} aria-label="Add task">
-            {#if toggleNewTask}
-            <div class="fade-in icon" in:fade={{ duration: 150 }}>
-                <Icon icon="fa6-solid:xmark" />
-            </div>
-            {:else}
-            <div class="fade-in icon" in:fade={{ duration: 150 }}>
-                <Icon icon="fa6-solid:plus" />
-            </div>
-            {/if}
-        </BaseButton>
-    </div>
-    <div class="filter-controls">
-        <FilterButtons label="All" value="all" current={$filter} onclick={() => filter.set('all')}>All Notes</FilterButtons>
-        <FilterButtons label="Active" value="active" current={$filter} onclick={() => filter.set('active')}>Active Notes</FilterButtons>
-        <FilterButtons label="Completed" value="completed" current={$filter} onclick={() => filter.set('completed')}>Completed Notes</FilterButtons>
-    </div>    
-    <div class="search">
-        <SearchButton tasks={tasks} onSearchResults={ handleSearchResults } debounceTime={500} />
-    </div>
+  <div class="header-title">
+    <Logo />
+    <BaseButton
+      onclick={() => (toggleNewTask = !toggleNewTask)}
+      aria-label="Add task"
+    >
+      {#if toggleNewTask}
+        <div class="fade-in icon" in:fade={{ duration: 150 }}>
+          <Icon icon="fa6-solid:xmark" />
+        </div>
+      {:else}
+        <div class="fade-in icon" in:fade={{ duration: 150 }}>
+          <Icon icon="fa6-solid:plus" />
+        </div>
+      {/if}
+    </BaseButton>
+  </div>
+
+  <div class="filter-controls">
+    <FilterButtons
+      label="All"
+      value="all"
+      current={$filter}
+      onclick={() => filter.set("all")}
+      >All Notes</FilterButtons
+    >
+    <FilterButtons
+      label="Active"
+      value="active"
+      current={$filter}
+      onclick={() => filter.set("active")}
+      >Active Notes</FilterButtons
+    >
+    <FilterButtons
+      label="Completed"
+      value="completed"
+      current={$filter}
+      onclick={() => filter.set("completed")}
+      >Completed Notes</FilterButtons
+    >
+  </div>
+
+  <div class="search">
+    <SearchButton debounceTime={500} />
+     {#if token}
+      <LogoutButton />
+     {/if}
+  </div>
 </header>
 
 {#if toggleNewTask}
-    <div class="overlay" role="button" tabindex="0" aria-label="Close modal" onclick={() => (toggleNewTask = false)} onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { toggleNewTask = false; } }}>
-        <div class="modal" role="dialog" tabindex="0" aria-modal="true" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
-            <Task bind:isShown={toggleNewTask} task={undefined} />
-        </div>
+  <div
+    class="overlay"
+    role="button"
+    tabindex="0"
+    aria-label="Close modal"
+    onclick={() => (toggleNewTask = false)}
+    onkeydown={(e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        toggleNewTask = false;
+      }
+    }}
+  >
+    <div
+      class="modal"
+      role="dialog"
+      tabindex="0"
+      aria-modal="true"
+      onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => e.stopPropagation()}
+    >
+      <Task bind:isShown={toggleNewTask} task={undefined} />
     </div>
+  </div>
 {/if}
 
 <style>
@@ -132,6 +173,9 @@
 }
 
 .search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-right: 1.25rem;
 }
 

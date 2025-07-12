@@ -1,12 +1,27 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
-    import { type Task, addTask, removeTask, updateTask } from "$lib/stores/tasks";
+    import { updateTaskRemote,  createNewTaskRemote, deleteTaskRemote } from "$lib/stores/tasksStore";
+    // import { getTasks, updateTask, createTask, deleteTask } from "$lib/api/api";
     import CancelButton from "./CancelButton.svelte";
     import DoneButton from "./DoneButton.svelte";
     import FormButtons from "./FormButtons.svelte";
     import { fade, slide } from "svelte/transition";
+    import { token } from "$lib/stores/auth";
+    import { get } from "svelte/store";
+    import type { Task } from "$lib/types/task";
+    import { updateTask } from "$lib/api/api";
 
-    let { task, isShown = $bindable(false), ...props } : { task?: Task, isNotCancelled?: boolean, [key: string]: any} = $props();
+   let {
+        task,
+        isShown = $bindable(false),
+        onUpdate = () => {},
+        ...props
+    }: {
+        task?: Task;
+        isNotCancelled?: boolean;
+        onUpdate?: () => void;
+        [key: string]: any;
+    } = $props();
 
     let taskName = $state(task?.title || '');
     let taskDescription = $state(task?.description || '');
@@ -22,24 +37,65 @@
         }
     }
 
-    function submitForm() {
-        if(isEditable && taskName !== "") {
-            updateTask(task!.id, {
-                id: task!.id,
+    // async function submitForm() {
+    //     const authToken = get(token);
+    //         if (!authToken) return;
+
+    //         if (isEditable && task && taskName !== "") {
+    //         await updateTaskRemote({
+    //             ...task,
+    //             completed: !task.completed
+    //         });
+    //             isEditable = false;
+    //             onUpdate();
+    //         } else if (!task && taskName !== "") {
+    //             await createNewTaskRemote({
+    //             title: taskName,
+    //             description: taskDescription
+    //         });
+    //         isShown = false;
+    //         onUpdate();
+    //     }
+    // }
+
+    async function submitForm() {
+        if (!taskName.trim()) return;
+
+        if (isEditable && task) {
+            await updateTaskRemote({
+                ...task,
                 title: taskName,
-                description: taskDescription,
-                completed: task!.completed,
+                description: taskDescription
             });
+
             isEditable = false;
-        } else if (taskName !== "") {
-            addTask({
-                id: Math.random(),
-                title: taskName,
-                description: taskDescription,
-                completed: false,
+            onUpdate();
+        } else if (!task) {
+            await createNewTaskRemote({
+               title: taskName,
+               description: taskDescription 
             });
+
             isShown = false;
+            onUpdate();
         }
+    }
+
+    async function toggleComplete() {
+        if (!task) return;
+        await updateTaskRemote({
+            ...task,
+            completed: !task.completed
+        });
+
+        onUpdate();
+    }
+
+    async function removeTask() {
+        if (!task) return;
+        await deleteTaskRemote(task.id);
+        
+        onUpdate();
     }
 </script>
 
@@ -53,13 +109,13 @@
                 {/if}
             </div>
             <div class="task-actions">
-                <FormButtons onclick={() => removeTask(task)} aria-labelledby="remove task">
+                <FormButtons onclick={removeTask} aria-labelledby="remove task">
                     <Icon icon="fa6-solid:trash" />
                 </FormButtons>
                 <FormButtons onclick={() => (isEditable = true)} aria-labelledby="update task">
                     <Icon icon="fa6-solid:pencil" />
                 </FormButtons>
-                <FormButtons onclick={() => task && updateTask(task.id, { ...task, completed: !task.completed })} aria-labelledby={task.completed ? "Mark task as done" : "Mark task as not done"}>
+                <FormButtons onclick={toggleComplete} aria-labelledby={task.completed ? "Mark task as done" : "Mark task as not done"}>
                     {#if task.completed}
                         <Icon icon="mdi:checkbox-outline" />
                     {:else}

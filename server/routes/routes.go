@@ -9,8 +9,8 @@ import (
 func SetupRoutes(app *fiber.App) {
 	// Public routes
 	api := app.Group("/api")
-	api.Post("/register", controllers.Register)
-	api.Post("/login", controllers.Login)
+	api.Post("/auth/register", controllers.Register)
+	api.Post("/auth/login", controllers.Login)
 
 	// Protected task routes
 	task := api.Group("/tasks", middleware.Protected())

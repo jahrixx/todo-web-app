@@ -1,8 +1,12 @@
-import type { Task } from "$lib/stores/tasks";
+import type { Task } from "$lib/types/task";
 
-export function filterTasksBySearch(tasks: Task[], query: string) {
-    if(!query.trim()) return tasks;
+export function filterTasksBySearch(tasks: Task[], query: string): Task[] {
+  if (!query.trim()) return tasks;
 
-    const searchTerm = query.toLowerCase();
-    return tasks.filter((task) => task.title.toLowerCase().includes(searchTerm));
+  const lowerQuery = query.toLowerCase();
+  return tasks.filter(
+    (t) =>
+      t.title.toLowerCase().includes(lowerQuery) ||
+      (t.description?.toLowerCase().includes(lowerQuery) ?? false)
+  );
 }

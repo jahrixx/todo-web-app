@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Icon from "@iconify/svelte";
-    import { searchQuery } from "$lib/stores/tasks";
+    import { searchQuery } from "$lib/stores/tasksStore";
     import { debounce } from "$lib/utils/debounce";
 
     let { 
@@ -74,8 +74,8 @@
         position: relative;
         display: flex;
         align-items: center;
-        gap: .35rem;
-        margin-right: .35rem;
+        /* gap: .35rem;
+        margin-right: .35rem; */
     }
 
     .search-icon {
