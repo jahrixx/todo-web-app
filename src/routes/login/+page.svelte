@@ -7,6 +7,13 @@
   let email = $state("");
   let password = $state("");
   let confirmPassword = $state("");
+  let username = $state("");
+  let firstName = $state("");
+  let lastName = $state("");
+  let birthdate = $state("");
+  let gender = $state("");
+  let address = $state("");
+  let phone = $state("");
   let error = $state("");
   let activeForm = $state<"login" | "signup">("login");
 
@@ -32,12 +39,21 @@
       error = "Passwords do not match";
       return;
     }
+    if (!username || !firstName || !lastName || !birthdate || !gender || !address || !phone) {
+        error = "All fields are required.";
+        return;
+    }
     try {
-      await registerUser(email, password);
+      await registerUser( email, password, username, firstName, lastName, birthdate, gender, address, phone );
       goto("/");
     } catch (err) {
-      error = "Registration failed";
+      console.error("Registration failed:", err);
+      error = err.message || "Registration failed. Please try again.";
     }
+  }
+
+  function loginWithGitthub() {
+    window.location.href = "http://localhost:8080/api/auth/github";
   }
 </script>
 
@@ -58,10 +74,11 @@
             <input id="login-password" type="password" bind:value={password} required />
           </div>
         </fieldset>
+        <button onclick={loginWithGitthub} class="btn-login">Sign in with Github</button>
         <button type="submit" class="btn-login">Login</button>
         <div>
           <button type="button" class="switcher switcher-login" onclick={() => (activeForm = 'signup')}>
-            <p style="color: black;">Dont have an account?</p>
+            <p class="switcher-text" style="color: black;">Dont have an account?</p>
           </button>
         </div>
       </form>
@@ -84,11 +101,39 @@
             <label for="signup-password-confirm">Confirm Password</label>
             <input id="signup-password-confirm" type="password" bind:value={confirmPassword} required />
           </div>
+          <div class="input-block">
+            <label for="signup-username">Username</label>
+            <input id="signup-username" type="text" bind:value={username} required />
+          </div>
+          <div class="input-block">
+            <label for="signup-firstname">First Name</label>
+            <input id="signgnup-firstname" type="text" bind:value={firstName} required />
+          </div>
+          <div class="input-block">
+            <label for="signup-lastname">Last Name</label>
+            <input id="signignup-lastname" type="text" bind:value={lastName} required />
+          </div>
+          <div class="input-block">
+            <label for="signup-birthdate">Birthdate</label>
+            <input id="signup-birthdate" type="date" bind:value={birthdate} required />
+          </div>
+          <div class="input-block">
+            <label for="signup-gender">Gender</label>
+            <input id="signgnup-gender" type="text" bind:value={gender} required />
+          </div>
+          <div class="input-block">
+            <label for="signup-address">Address</label>
+            <input id="signgnup-address" type="text" bind:value={address} required />
+          </div>
+          <div class="input-block">
+            <label for="signgnup-phone">Phone</label>
+            <input id="signgnup-phone" type="tel" bind:value={phone} required />
+          </div>
         </fieldset>
         <button type="submit" class="btn-signup">Register</button>
         <div>  
           <button type="button" class="switcher switcher-signup" onclick={() => (activeForm = 'login')}>
-            <p style="color: black;">Already have an account?</p>
+            <p class="switcher-text" style="color: black;">Already have an account?</p>
           </button>
         </div>
       </form>
@@ -356,6 +401,7 @@
   background: #1d4ed8;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transform: translateX(-30%);
+  cursor: pointer;
 }
 
 .btn-signup {
@@ -363,5 +409,11 @@
   background: #1d4ed8;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transform: translateX(30%);
+  cursor: pointer;
+}
+
+.switcher-text:hover {
+  text-decoration: underline;
+  cursor: pointer
 }
 </style>

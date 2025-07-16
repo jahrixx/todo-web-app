@@ -19,7 +19,7 @@ func Register(c *fiber.Ctx) error {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), 12)
 	user.Password = string(hashedPassword)
 
-	_, err := config.DB.Exec("INSERT INTO users (email, password) VALUES ($1, $2)", user.Email, user.Password)
+	_, err := config.DB.Exec("INSERT INTO users (email, password, username, firstName, lastName, birthdate, gender, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)", user.Email, user.Password, user.Username, user.FirstName, user.LastName, user.BirthDate, user.Gender, user.Address, user.Phone)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "User already exists"})
 	}

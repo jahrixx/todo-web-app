@@ -17,14 +17,27 @@ token.subscribe((value) => {
   }
 })
 
-export async function registerUser(email: string, password: string) {
+export async function registerUser(
+  email: string,
+  password: string,
+  username: string,
+  firstName: string,
+  lastName: string,
+  birthdate: string,
+  gender: string,
+  address: string,
+  phone: string
+) {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email, password, username, firstName, lastName, birthdate, gender, address, phone }),
   });
 
-  if (!res.ok) throw new Error("Registration failed");
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({ message: "Unknown error" }));
+    throw new Error(`Registration failed: ${errorData.message || res.statusText}`);
+  }
 
   console.log(`${API_URL}/auth/register`);  
   return await res.json();

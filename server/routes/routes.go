@@ -12,6 +12,9 @@ func SetupRoutes(app *fiber.App) {
 	api.Post("/auth/register", controllers.Register)
 	api.Post("/auth/login", controllers.Login)
 
+	api.Get("/auth/github", controllers.GitHubLogin)
+	api.Get("/auth/github/callback", controllers.GitHubCallback)
+
 	// Protected task routes
 	task := api.Group("/tasks", middleware.Protected())
 	task.Get("/", controllers.GetTasks)
