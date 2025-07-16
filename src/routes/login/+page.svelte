@@ -6,20 +6,7 @@
 
   let email = $state("");
   let password = $state("");
-  let confirmPassword = $state("");
-  let username = $state("");
-  let firstName = $state("");
-  let lastName = $state("");
-  let birthdate = $state("");
-  let gender = $state("");
-  let address = $state("");
-  let phone = $state("");
   let error = $state("");
-  let activeForm = $state<"login" | "signup">("login");
-
-  onMount(() => {
-    activeForm = "login";
-  });
 
   async function handleLogin() {
     error = "";
@@ -33,387 +20,84 @@
     }
   }
 
-  async function handleRegister() {
-    error = "";
-    if (password !== confirmPassword) {
-      error = "Passwords do not match";
-      return;
-    }
-    if (!username || !firstName || !lastName || !birthdate || !gender || !address || !phone) {
-        error = "All fields are required.";
-        return;
-    }
-    try {
-      await registerUser( email, password, username, firstName, lastName, birthdate, gender, address, phone );
-      goto("/");
-    } catch (err) {
-      console.error("Registration failed:", err);
-      error = err.message || "Registration failed. Please try again.";
-    }
-  }
-
   function loginWithGitthub() {
     window.location.href = "http://localhost:8080/api/auth/github";
   }
 </script>
 
 <Header />
-<section class="forms-section">
-  <div class="forms">
-    <!-- Login Form -->
-    <div class="form-wrapper {activeForm === 'login' ? 'is-active' : ''}">
-      <form class="form form-login" onsubmit={handleLogin}>
-        <fieldset>
-          <legend>Login</legend>
-          <div class="input-block">
-            <label for="login-email">E-mail</label>
-            <input id="login-email" type="email" bind:value={email} required />
-          </div>
-          <div class="input-block">
-            <label for="login-password">Password</label>
-            <input id="login-password" type="password" bind:value={password} required />
-          </div>
-        </fieldset>
-        <button onclick={loginWithGitthub} class="btn-login">Sign in with Github</button>
-        <button type="submit" class="btn-login">Login</button>
-        <div>
-          <button type="button" class="switcher switcher-login" onclick={() => (activeForm = 'signup')}>
-            <p class="switcher-text" style="color: black;">Dont have an account?</p>
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Signup Form -->
-    <div class="form-wrapper {activeForm === 'signup' ? 'is-active' : ''}">
-      <form class="form form-signup" onsubmit={handleRegister}>
-        <fieldset>
-          <legend>Sign Up</legend>
-          <div class="input-block">
-            <label for="signup-email">E-mail</label>
-            <input id="signup-email" type="email" bind:value={email} required />
-          </div>
-          <div class="input-block">
-            <label for="signup-password">Password</label>
-            <input id="signup-password" type="password" bind:value={password} required />
-          </div>
-          <div class="input-block">
-            <label for="signup-password-confirm">Confirm Password</label>
-            <input id="signup-password-confirm" type="password" bind:value={confirmPassword} required />
-          </div>
-          <div class="input-block">
-            <label for="signup-username">Username</label>
-            <input id="signup-username" type="text" bind:value={username} required />
-          </div>
-          <div class="input-block">
-            <label for="signup-firstname">First Name</label>
-            <input id="signgnup-firstname" type="text" bind:value={firstName} required />
-          </div>
-          <div class="input-block">
-            <label for="signup-lastname">Last Name</label>
-            <input id="signignup-lastname" type="text" bind:value={lastName} required />
-          </div>
-          <div class="input-block">
-            <label for="signup-birthdate">Birthdate</label>
-            <input id="signup-birthdate" type="date" bind:value={birthdate} required />
-          </div>
-          <div class="input-block">
-            <label for="signup-gender">Gender</label>
-            <input id="signgnup-gender" type="text" bind:value={gender} required />
-          </div>
-          <div class="input-block">
-            <label for="signup-address">Address</label>
-            <input id="signgnup-address" type="text" bind:value={address} required />
-          </div>
-          <div class="input-block">
-            <label for="signgnup-phone">Phone</label>
-            <input id="signgnup-phone" type="tel" bind:value={phone} required />
-          </div>
-        </fieldset>
-        <button type="submit" class="btn-signup">Register</button>
-        <div>  
-          <button type="button" class="switcher switcher-signup" onclick={() => (activeForm = 'login')}>
-            <p class="switcher-text" style="color: black;">Already have an account?</p>
-          </button>
-        </div>
-      </form>
-    </div>
+<div class="login-page">
+  <div class="form" >
+    <form class="login-form" onsubmit={handleLogin}>
+      <input type="email" placeholder="Email" bind:value={email} required/>
+      <input type="password" placeholder="Password" bind:value={password} required/>
+      <button type="submit">login</button><br>
+      <p>or</p>
+      <button onclick={loginWithGitthub} class="btn-login">Sign in with Github</button>
+      <p class="message">Not registered? <a href="/register">Create an account</a></p>
+    </form>
   </div>
-
-  {#if error}
-    <p style="color: red; margin-top: 1rem;">{error}</p>
-  {/if}
-</section>
+    {#if error}
+      <p style="color: red; margin-top: 1rem;">{error}</p>
+    {/if}
+</div>
 
 <style>
- *,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-:global(body) {
-  margin: 0;
-  font-family: Roboto, -apple-system, 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
-  background: url('../../lib/assets/wallpaper.jpg');
-}
-
-.forms-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.forms {
-  display: flex;
-  align-items: flex-start;
-  margin-top: 150px;
-}
-
-.form-wrapper {
-  animation: hideLayer .3s ease-out forwards;
-}
-
-.form-wrapper.is-active {
-  animation: showLayer .3s ease-in forwards;
-}
-
-@keyframes showLayer {
-  50% {
+  :global(body) {
+    padding: 0;
+    margin: 0;
+    background: url('../../lib/assets/wallpaper.jpg');
+  }
+  .login-page {
+    width: 360px;
+    padding: 8% 0 0;
+    margin: auto;
+  }
+  .form {
+    position: relative;
     z-index: 1;
+    background: #FFFFFF;
+    max-width: 360px;
+    margin: 0 auto 100px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   }
-  100% {
-    z-index: 1;
+  .form input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
   }
-}
-
-@keyframes hideLayer {
-  0% {
-    z-index: 1;
+  .form button {
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #4CAF50;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
   }
-  49.999% {
-    z-index: 1;
+  .form button:hover,.form button:active,.form button:focus {
+    background: #43A047;
   }
-}
-
-.switcher {
-  position: relative;
-  cursor: pointer;
-  display: block;
-  margin-right: auto;
-  margin-left: auto;
-  padding: 0;
-  text-transform: uppercase;
-  font-family: inherit;
-  font-size: 12px;
-  letter-spacing: .5px;
-  color: #999;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  font-style: italic;
-  transform: translateX(0);
-  transition: all .3s ease-out;
-}
-
-.form {
-  overflow: hidden;
-  min-width: 100px;
-  margin-top: 50px;
-  padding: 30px 70px;
-  border-radius: 5px;
-  transform-origin: top;
-}
-
-.form-login {
-  animation: hideLogin .3s ease-out forwards;
-}
-
-.form-wrapper.is-active .form-login {
-  animation: showLogin .3s ease-in forwards;
-}
-
-@keyframes showLogin {
-  0% {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transform: translate(40%, 10px);
+  .form .message {
+    margin: 15px 0 0;
+    color: #b3b3b3;
+    font-size: 12px;
   }
-  50% {
-    transform: translate(0, 0);
+  .form .message a {
+    color: #4CAF50;
+    text-decoration: none;
   }
-  100% {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transform: translate(35%, -20px);
-  }
-}
-
-@keyframes hideLogin {
-  0% {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transform: translate(35%, -20px);
-  }
-  50% {
-    transform: translate(0, 0);
-  }
-  100% {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transform: translate(40%, 10px);
-  }
-}
-
-.form-signup {
-  animation: hideSignup .3s ease-out forwards;
-}
-
-.form-wrapper.is-active .form-signup {
-  animation: showSignup .3s ease-in forwards;
-}
-
-@keyframes showSignup {
-  0% {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transform: translate(-40%, 10px) scaleY(.8);
-  }
-  50% {
-    transform: translate(0, 0) scaleY(.8);
-  }
-  100% {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transform: translate(-35%, -20px) scaleY(1);
-  }
-}
-
-@keyframes hideSignup {
-  0% {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transform: translate(-35%, -20px) scaleY(1);
-  }
-  50% {
-    transform: translate(0, 0) scaleY(.8);
-  }
-  100% {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transform: translate(-40%, 10px) scaleY(.8);
-  }
-}
-
-.form fieldset {
-  position: relative;
-  opacity: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  transition: all .3s ease-out;
-}
-
-.form-login fieldset {
-  transform: translateX(-50%);
-}
-
-.form-signup fieldset {
-  transform: translateX(50%);
-}
-
-.form-wrapper.is-active fieldset {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity .4s ease-in, transform .35s ease-in;
-}
-
-.form legend {
-  position: absolute;
-  overflow: hidden;
-  width: 1px;
-  height: 1px;
-  clip: rect(0 0 0 0);
-}
-
-.input-block {
-  margin-bottom: 10px;
-}
-
-.input-block label {
-  font-size: 14px;
-  color: black;
-}
-
-.input-block input {
-  display: block;
-  width: 100%;
-  margin-top: 8px;
-  padding-right: 15px;
-  padding-left: 15px;
-  font-size: 16px;
-  line-height: 30px;
-  color: #3b4465;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: none;
-}
-
-.form [type='submit'] {
-  opacity: 0;
-  display: block;
-  min-width: 120px;
-  margin: 10px auto 10px;
-  font-size: 18px;
-  line-height: 40px;
-  border-radius: 25px;
-  border: none;
-  transition: all .3s ease-out;
-}
-
-.form-wrapper.is-active .form [type='submit'] {
-  opacity: 1;
-  transform: translateX(0);
-  transition: all .4s ease-in;
-}
-
-.btn-login {
-  color: #fbfdff;
-  background: #1d4ed8;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  transform: translateX(-30%);
-  cursor: pointer;
-}
-
-.btn-signup {
-  color: #fbfdff;
-  background: #1d4ed8;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  transform: translateX(30%);
-  cursor: pointer;
-}
-
-.switcher-text:hover {
-  text-decoration: underline;
-  cursor: pointer
-}
 </style>
