@@ -9,6 +9,7 @@
   import SearchButton from "./SearchButton.svelte";
   import BaseButton from "./BaseButton.svelte";
   import FilterButtons from "./FilterButtons.svelte";
+  import LoginButton from "./LoginButton.svelte";
   
   let { toggleNewTask = $bindable(false), ...props }: { [key: string]: any } = $props();
   let showForm = false;
@@ -48,7 +49,13 @@
       </BaseButton>
     {/if}
   </div>
-
+  
+  {#if !$token}
+    <div>
+      <LoginButton />
+    </div>
+  {/if}
+  
   {#if $token}
     <div class="filter-controls">
       <FilterButtons

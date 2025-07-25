@@ -149,7 +149,6 @@
     </fieldset>
     <div class="register-btn">
         <button class="button" type="submit">Register &raquo;</button>
-        <p class="message">Already registered? <a href="/login">Proceed to login.</a></p>
     </div>
 </form>
 
@@ -177,8 +176,8 @@
     }
     form.register{
         width:900px;
-        margin: 150px auto 0px auto;
-        height:470px;
+        margin: 180px auto 0px auto;
+        height:410px;
         padding:5px;
         background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(10px);
@@ -334,7 +333,7 @@
     }
     form.register select.date
     {
-        width: 40px;
+        width: 45px;
         padding-top: 2px;
         padding-bottom: 2px;
         background: rgba(255, 255, 255, 0.2);
@@ -344,14 +343,5 @@
     }
     input:focus, select:focus{
         background-color: #efffe0;
-    }
-    .message {
-        margin: 15px 0 0;
-        color: #444;
-        font-size: 12px;
-    }
-    .message a {
-        color: #2563eb;
-        text-decoration: none;
     }
 </style>

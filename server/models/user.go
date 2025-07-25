@@ -2,21 +2,24 @@ package models
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/jahrixx/todo-web-app/config"
 )
 
 type User struct {
-	ID        string `json:"id"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	Username  string `json:"username"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	BirthDate string `json:"birthdate"`
-	Gender    string `json:"gender"`
-	Address   string `json:"address"`
-	Phone     string `json:"phone"`
+	ID            string `json:"id"`
+	Email         string `json:"email"`
+	Password      string `json:"password"`
+	Username      string `json:"username"`
+	FirstName     string `json:"firstName"`
+	LastName      string `json:"lastName"`
+	BirthDate     string `json:"birthdate"`
+	Gender        string `json:"gender"`
+	Address       string `json:"address"`
+	Phone         string `json:"phone"`
+	ResetToken    string `gorm:"size: 255"`
+	ResetTokenExp time.Time
 }
 
 func FindOrCreateUserByEmail(email string, username string) (*User, error) {

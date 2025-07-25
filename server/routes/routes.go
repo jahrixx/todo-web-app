@@ -11,6 +11,8 @@ func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api")
 	api.Post("/auth/register", controllers.Register)
 	api.Post("/auth/login", controllers.Login)
+	api.Post("/auth/forgot-password", controllers.ForgotPassword)
+	api.Post("/auth/reset-password", controllers.ResetPassword)
 
 	api.Get("/auth/github", controllers.GitHubLogin)
 	api.Get("/auth/github/callback", controllers.GitHubCallback)
